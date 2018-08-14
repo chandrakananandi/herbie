@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../common.rkt" "../alternative.rkt" "../programs.rkt")
+(require "../common.rkt" "../alternative.rkt" "../programs.rkt" "../type-check.rkt")
 (require "../points.rkt" "../float.rkt") ; For binary search
 
 (module+ test
@@ -63,6 +63,7 @@
   (define prog-body (program-body prog))
   (for/list ([expr (remove-duplicates (subexprs-in-expr prog-body))]
              #:when (and (not (null? (free-variables expr)))
+                         (equal? (type-of expr (for/list ([var (program-variables prog)]) (cons var 'real))) 'real)
                          (critical-subexpression? prog-body expr)))
     expr))
 
